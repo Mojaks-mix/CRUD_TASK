@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <title>CRUD_MVC</title>
+    <title>CRUD_TASK</title>
   </head>
   <body>
   
@@ -26,11 +26,11 @@
           <a class="nav-link" href="{plugin_url}">Home </a>
         </li>
         <li class="nav-item ">
-          <a class="nav-link" href="{plugin_url name = 'products/index'}">Products</a>
+          <a class="nav-link" href="{plugin_url name = 'categories/index'}">Categories</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="{plugin_url name = 'products/add'}">Add Product</a>
+          <a class="nav-link" href="{plugin_url name = 'categories/add'}">Add Category</a>
         </li>
         
       </ul>

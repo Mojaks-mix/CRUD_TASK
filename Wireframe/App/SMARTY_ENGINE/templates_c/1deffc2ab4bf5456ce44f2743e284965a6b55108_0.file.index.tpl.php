@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 4.3.4, created on 2024-01-21 10:45:59
-  from 'C:\xampp\htdocs\MVC_CRUD\APP\Views\templates\product\index.tpl' */
+/* Smarty version 4.3.4, created on 2024-01-21 14:01:14
+  from 'C:\xampp\htdocs\MVC_CRUD\APP\Views\templates\category\index.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.3.4',
-  'unifunc' => 'content_65ace7d7d8d208_71303686',
+  'unifunc' => 'content_65ad159a17c5c9_49811874',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    '0042692cd4475ddef10b71c9e670e9c15eebd491' => 
+    '1deffc2ab4bf5456ce44f2743e284965a6b55108' => 
     array (
-      0 => 'C:\\xampp\\htdocs\\MVC_CRUD\\APP\\Views\\templates\\product\\index.tpl',
-      1 => 1705827270,
+      0 => 'C:\\xampp\\htdocs\\MVC_CRUD\\APP\\Views\\templates\\category\\index.tpl',
+      1 => 1705840737,
       2 => 'file',
     ),
   ),
@@ -22,11 +22,11 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
     'file:inc/footer.tpl' => 1,
   ),
 ),false)) {
-function content_65ace7d7d8d208_71303686 (Smarty_Internal_Template $_smarty_tpl) {
+function content_65ad159a17c5c9_49811874 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_subTemplateRender("file:inc/header.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 ?>
 
-<h1 class="text-center my-5 py-3">View All Products</h1>
+<h1 class="text-center my-5 py-3">View All Categories</h1>
 
 <div class="container">
     <div class="row">
@@ -44,9 +44,7 @@ $_smarty_tpl->_subTemplateRender("file:inc/header.tpl", $_smarty_tpl->cache_id, 
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Quantity</th>
+                        <th scope="col">Parent Id</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
                     </tr>
@@ -54,7 +52,7 @@ $_smarty_tpl->_subTemplateRender("file:inc/header.tpl", $_smarty_tpl->cache_id, 
                 <tbody>
                     <?php $_smarty_tpl->_assignInScope('i', 1);?>
                     <?php
-$_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['data']->value['products'], 'row');
+$_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['data']->value['categories'], 'row');
 $_smarty_tpl->tpl_vars['row']->do_else = true;
 if ($_from !== null) foreach ($_from as $_smarty_tpl->tpl_vars['row']->value) {
 $_smarty_tpl->tpl_vars['row']->do_else = false;
@@ -63,20 +61,16 @@ $_smarty_tpl->tpl_vars['row']->do_else = false;
                             <td><?php echo $_smarty_tpl->tpl_vars['i']->value;?>
 </td>
                             <?php $_smarty_tpl->_assignInScope('i', $_smarty_tpl->tpl_vars['i']->value+1);?>
-                            <td><?php echo $_smarty_tpl->tpl_vars['row']->value['name'];?>
+                            <td><?php echo $_smarty_tpl->tpl_vars['row']->value['category_name'];?>
 </td>
-                            <td><?php echo $_smarty_tpl->tpl_vars['row']->value['price'];?>
- <b class="float-right"> $ </b></td>
-                            <td class="text-center"><?php echo $_smarty_tpl->tpl_vars['row']->value['description'];?>
-</td>
-                            <td><?php echo $_smarty_tpl->tpl_vars['row']->value['quantity'];?>
+                            <td><?php echo $_smarty_tpl->tpl_vars['row']->value['parent_id'];?>
 </td>
                             <td>
-                                <a href="<?php echo call_user_func_array( $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['plugin_url'][0], array( array('name'=>('products/edit/').($_smarty_tpl->tpl_vars['row']->value['id'])),$_smarty_tpl ) );?>
+                                <a href="<?php echo call_user_func_array( $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['plugin_url'][0], array( array('name'=>('categories/edit/').($_smarty_tpl->tpl_vars['row']->value['id'])),$_smarty_tpl ) );?>
 " class="btn btn-info">Edit</a>
                             </td>
                             <td>
-                                <a href="<?php echo call_user_func_array( $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['plugin_url'][0], array( array('name'=>('products/delete/').($_smarty_tpl->tpl_vars['row']->value['id'])),$_smarty_tpl ) );?>
+                                <a href="<?php echo call_user_func_array( $_smarty_tpl->smarty->registered_plugins[Smarty::PLUGIN_FUNCTION]['plugin_url'][0], array( array('name'=>('categories/delete/').($_smarty_tpl->tpl_vars['row']->value['id'])),$_smarty_tpl ) );?>
 " class="btn btn-danger">Delete</a>
                             </td>
                         </tr>

@@ -1,6 +1,6 @@
 {include file="inc/header.tpl"}
 
-<h1 class="text-center my-5 py-3">View All Products</h1>
+<h1 class="text-center my-5 py-3">View All Categories</h1>
 
 <div class="container">
     <div class="row">
@@ -16,28 +16,24 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Quantity</th>
+                        <th scope="col">Parent Id</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     {assign var = "i" value = 1}
-                    {foreach $data.products as $row}
+                    {foreach $data.categories as $row}
                         <tr>
                             <td>{$i}</td>
                             {assign var = "i" value = $i + 1}
-                            <td>{$row.name}</td>
-                            <td>{$row.price} <b class="float-right"> $ </b></td>
-                            <td class="text-center">{$row.description}</td>
-                            <td>{$row.quantity}</td>
+                            <td>{$row.category_name}</td>
+                            <td>{$row.parent_id}</td>
                             <td>
-                                <a href="{plugin_url name ='products/edit/'|cat:$row.id}" class="btn btn-info">Edit</a>
+                                <a href="{plugin_url name ='categories/edit/'|cat:$row.id}" class="btn btn-info">Edit</a>
                             </td>
                             <td>
-                                <a href="{plugin_url name ='products/delete/'|cat:$row.id}" class="btn btn-danger">Delete</a>
+                                <a href="{plugin_url name ='categories/delete/'|cat:$row.id}" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                     {/foreach}

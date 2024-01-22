@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Model;
+use App\DataObjects\CategoryDTO;
 
 class Category extends Model
 {
@@ -20,7 +21,18 @@ class Category extends Model
 
         $rows = $statement->fetchAll();
 
-        return $rows;
+        $categories = [];
+        if($rows !== null){
+            foreach($rows as $row){
+                $category = new CategoryDTO($row['id'],
+                $row['category_name'],
+                $row['parent_id']
+                );
+                $categories[] = $category;
+            }
+        }
+
+        return $categories;
     }
 
     public function addCategory(array $data)

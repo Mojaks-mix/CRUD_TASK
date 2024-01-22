@@ -8,6 +8,7 @@ use App\Models\Category;
 class CategoriesController
 {
     private $db;
+    private array $data = [];
 
     public function __construct(){
         $this->db = new Category();
@@ -15,24 +16,25 @@ class CategoriesController
 
     public function index()
     {
-        $data['categories'] = ($this->db->getAllCategories());
+        $this->data['categories'] = ($this->db->getAllCategories());
         
-        View::load('category\\index', $data);
+        View::load('category\\index', $this->data);
     }
 
     public function add()
     {
-        View::load('category\\add');
+        $this->data = $this->formatCategory($this->db->getAllCategories());
+        View::load('category\\add',$this->data);
     }
 
     public function store()
     {
         if (isset($_POST['submit'])) {
-            $data = [
+            $this->data = [
                 'category_name' => $_POST['category_name'],
-                'parent_id' => $_POST['parent_id']
+                'parent_id' => $_POST['parent_id'] == 'No Parent'? null : $_POST['parent_id']
             ];
-            if($this->db->addCategory($data)){
+            if($this->db->addCategory($this->data)){
                 View::load('category\\add',['success' => 'Data was created successfully']);
             }
             
@@ -44,8 +46,9 @@ class CategoriesController
 
     public function edit($id)
     {
-        $data['row'] = $this->db->getCategory($id);
-        return View::load('category\\edit',$data);
+        $this->data['categories'] = $this->formatCategory($this->db->getAllCategories());
+        $this->data['row'] = $this->db->getCategory($id);
+        return View::load('category\\edit',$this->data);
     }
 
     public function update()
@@ -54,21 +57,21 @@ class CategoriesController
         {
             $id = $_POST['id'];
             $this->db = new Category();
-            $data = [
+            $this->data = [
                 'category_name' => $_POST['category_name'],
-                'parent_id' => $_POST['parent_id']];
+                'parent_id' => $_POST['parent_id']== 'No Parent'? null : $_POST['parent_id']];
 
-            if($this->db->updateCategory($id,$data))
+            if($this->db->updateCategory($id,$this->data))
             {
-                $data['success'] = "Updated Successfully";
-                $data['row'] = $this->db->getCategory($id);
-                View::load('category\\edit',$data);
+                $this->data['success'] = "Updated Successfully";
+                $this->data['row'] = $this->db->getCategory($id);
+                View::load('category\\edit',$this->data);
             }
             else 
             {
-                $data['error'] = "Error";
-                $data['row'] = $this->db->getCategory($id);
-                View::load('category\\edit',$data);
+                $this->data['error'] = "Error";
+                $this->data['row'] = $this->db->getCategory($id);
+                View::load('category\\edit',$this->data);
             }
         }
     }
@@ -77,13 +80,48 @@ class CategoriesController
     public function delete($id){
         if($this->db->deleteCategory($id))
         {
-            $data['success'] = "Category Have Been Deleted";
-            return View::load('category\\delete',$data);
+            $this->data['success'] = "Category Have Been Deleted";
+            return View::load('category\\delete',$this->data);
         }
         else 
         {
-            $data['error'] = "Error";
-            return View::load('category\\delete',$data);
+            $this->data['error'] = "Error";
+            return View::load('category\\delete',$this->data);
         }
+    }
+
+    private function formatCategory(array $categories):array{
+        $result = [];
+        if ($categories){
+            foreach($categories as $category){        
+                $parent_path = $this->pathToParent($category->id);
+                $this->setNestedValue($result, $parent_path, $category);
+            }
+        }
+        return $result;
+    }
+
+    private function pathToParent(string $id): array{
+        $path = [];
+        while($parent = $this->db->getCategory($id)){
+            array_unshift($path, $parent['id']);
+            $id = $parent['parent_id'];
+        }
+
+        return $path;
+    }
+
+    private function setNestedValue(array &$array, array $path, mixed $value): void{
+        $current = &$array;
+    
+        foreach ($path as $key) {
+            if (!isset($current[$key])) {
+                $current[$key] = [];
+            }
+    
+            $current = &$current[$key];
+        }
+    
+        $current[] = $value;
     }
 }

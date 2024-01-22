@@ -6,7 +6,7 @@ define("DS", DIRECTORY_SEPARATOR);
 define("ROOT_PATH", __DIR__ . DS);
 define("APP", ROOT_PATH . 'APP' . DS);
 define("CORE", APP . 'Core' . DS);
-define("CONFIG", APP . 'Config' . DS);
+define("PLUGINS", CORE . 'Plugins' . DS);
 define("CONTROLLERS", APP . 'Controllers' . DS);
 define("MODELS", APP . 'Models' . DS);
 define("VIEWS", APP . 'Views' . DS);
@@ -17,7 +17,7 @@ define("SMARTY_ENGINE", APP . 'SMARTY_ENGINE' . DS);
 define('SITE_URL', 'http://crud.mvc.vashouse.com/');
 
 // configuration files
-require_once CONFIG . 'helper.php';
+require_once PLUGINS . 'helper.php';
 
 //to load enviroment variables
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);

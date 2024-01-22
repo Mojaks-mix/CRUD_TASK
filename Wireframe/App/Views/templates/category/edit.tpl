@@ -19,9 +19,25 @@
                     <input type="text" required value="{$data.row.category_name}" name="category_name" class="form-control" id="category_name">
                     <input type="hidden" value="{$data.row.id}" name="id">
                 </div>
-                <div class="form-group">
-                    <label for="price">Parent</label>
-                    <input type="text" required class="form-control" value="{$data.row.parent_id}" name="parent_id" id="parent_id">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Parent</label>
+                    </div>
+                    <select required class="custom-select" name="parent_id" id="parent_id">
+                        <option selected>No Parent</option>
+                        {function name=printArrayWithLevels array=$data level=0}
+                            {assign var="options" value=""}
+                            {foreach $array as $value}
+                                {if is_array($value)}
+                                    {assign var="options" value="$options{printArrayWithLevels array=$value level=$level+1}"}
+                                {else}
+                                    {assign var="options" value="$options<option value=\"{$value->id}\">{str_repeat('-', $level)} {$value->category_name}</option>"}
+                                {/if}
+                            {/foreach}
+                            {$options}
+                        {/function}
+                        {call printArrayWithLevels array=$data.categories}
+                    </select>
                 </div>
                 <button type="submit" name="submit" class="btn btn-primary">Submit</button>
             </form>

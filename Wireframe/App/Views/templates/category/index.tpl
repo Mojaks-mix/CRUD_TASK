@@ -16,7 +16,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Parent Id</th>
+                        <th scope="col">Parent</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
                     </tr>
@@ -27,13 +27,13 @@
                         <tr>
                             <td>{$i}</td>
                             {assign var = "i" value = $i + 1}
-                            <td>{$row.category_name}</td>
-                            <td>{$row.parent_id}</td>
+                            <td>{$row->category_name}</td>
+                            <td>{$row->parent_id}</td>
                             <td>
-                                <a href="{plugin_url name ='categories/edit/'|cat:$row.id}" class="btn btn-info">Edit</a>
+                                <a href="{plugin_url name ='categories/edit/'|cat:$row->id}" class="btn btn-info">Edit</a>
                             </td>
                             <td>
-                                <a href="{plugin_url name ='categories/delete/'|cat:$row.id}" class="btn btn-danger">Delete</a>
+                                <a href="{plugin_url name ='categories/delete/'|cat:$row->id}" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                     {/foreach}

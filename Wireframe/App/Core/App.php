@@ -2,7 +2,7 @@
 declare (strict_types = 1);
 
 namespace App\Core;
-
+use PDO;
 
 /**
  * Front end Controller
@@ -10,15 +10,23 @@ namespace App\Core;
 
 class App
 {
+    private static PDO $db;
     //~~~~~Methods~~~~~
 
     public function __construct(
+        protected Config $config,
         protected string $controller = "App\\Controllers\\HomeController",
         protected string $action = "index",
         protected array $parameters = []
     ) {
+        static::$db = Database::pdo($config->db ?? []);
         $this->prepareUrl();
         $this->render();
+    }
+
+    public static function db(): PDO
+    {
+        return static::$db;
     }
 
     

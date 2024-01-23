@@ -1,4 +1,6 @@
-{include file="inc/header.tpl"}
+{extends file='home.tpl'}
+
+{block name=content}
 
 <div class="container">
     <div class="row">
@@ -15,4 +17,4 @@
     </div>
 </div>
 
-{include file="inc/footer.tpl"}
+{/block}

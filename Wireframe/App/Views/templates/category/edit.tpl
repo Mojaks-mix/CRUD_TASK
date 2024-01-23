@@ -1,5 +1,7 @@
-{include file="inc/header.tpl"}
+{extends file='home.tpl'}
 
+{block name=content}
+    
 <h1 class="text-center mt-5 mb-2 py-3">Edit Category</h1>
 
 <div class="container">
@@ -25,18 +27,9 @@
                     </div>
                     <select required class="custom-select" name="parent_id" id="parent_id">
                         <option selected>No Parent</option>
-                        {function name=printArrayWithLevels array=$data level=0}
-                            {assign var="options" value=""}
-                            {foreach $array as $value}
-                                {if is_array($value)}
-                                    {assign var="options" value="$options{printArrayWithLevels array=$value level=$level+1}"}
-                                {else}
-                                    {assign var="options" value="$options<option value=\"{$value->id}\">{str_repeat('-', $level)} {$value->category_name}</option>"}
-                                {/if}
-                            {/foreach}
-                            {$options}
-                        {/function}
-                        {call printArrayWithLevels array=$data.categories}
+                        {foreach $data.categories as $key => $value}
+                            <option value = "{$value}">{$key}</option>
+                        {/foreach}
                     </select>
                 </div>
                 <button type="submit" name="submit" class="btn btn-primary">Submit</button>
@@ -46,4 +39,4 @@
     </div>
 </div>
 
-{include file="inc/footer.tpl"}
+{/block}

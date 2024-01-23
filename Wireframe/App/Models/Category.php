@@ -13,6 +13,12 @@ class Category extends Model
         parent::__construct();
     }
 
+    public function getPaginatedCategories($perPage, $offset)
+    {
+        $query = "SELECT * FROM $this->table LIMIT $perPage OFFSET $offset";
+        return $this->conn->query($query)->fetchAll();
+    }
+
     public function getAllCategories()
     {
         $query = "SELECT * FROM $this->table";

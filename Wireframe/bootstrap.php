@@ -24,5 +24,6 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 use App\Core\App;
+use App\Core\Config;
 
-new App();
+new App(new Config($_ENV));

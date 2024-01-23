@@ -13,6 +13,6 @@ abstract class Model
     
     public function __construct()
     {
-        $this->conn = Database::pdo();
+        $this->conn = App::db();
     }
 }

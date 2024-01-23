@@ -1,4 +1,6 @@
-{include file="inc/header.tpl"}
+{extends file='home.tpl'}
+
+{block name=content}
 
 <h1 class="text-center my-5 py-3">View All Categories</h1>
 
@@ -11,7 +13,7 @@
             {if isset($data.error)}
                 <h3 class="alert alert-danger text-center">{$data.error}</h3>
             {/if}
-            <table class="table">
+            <table id="myTable" class="table">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">#</th>
@@ -21,26 +23,38 @@
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
-                <tbody>
+                {* <tbody>
                     {assign var = "i" value = 1}
                     {foreach $data.categories as $row}
                         <tr>
                             <td>{$i}</td>
                             {assign var = "i" value = $i + 1}
-                            <td>{$row->category_name}</td>
-                            <td>{$row->parent_id}</td>
+                            <td>{$row.category_name}</td>
+                            <td>{$row.parent_id}</td>
                             <td>
-                                <a href="{plugin_url name ='categories/edit/'|cat:$row->id}" class="btn btn-info">Edit</a>
+                                <a href="{plugin_url name ='categories/edit/'|cat:$row.id}" class="btn btn-info">Edit</a>
                             </td>
                             <td>
-                                <a href="{plugin_url name ='categories/delete/'|cat:$row->id}" class="btn btn-danger">Delete</a>
+                                <a href="{plugin_url name ='categories/delete/'|cat:$row.id}" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                     {/foreach}
-                </tbody>
+                </tbody> *}
             </table>
         </div>
     </div>
 </div>
 
-{include file="inc/footer.tpl"}
+{/block}
+
+<!-- JavaScripts -->
+{block name=JS}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready( function () {
+            console.log('hi');
+            $('#myTable').DataTable();
+        });
+    </script>
+{/block}

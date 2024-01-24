@@ -1,7 +1,7 @@
 {extends file='home.tpl'}
 
 {block name=content}
-
+{* {include file='./edit.tpl'} *}
 <h1 class="text-center my-5 py-3">View All Categories</h1>
 
 <div class="container">
@@ -19,42 +19,32 @@
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
                         <th scope="col">Parent</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
+                        <th scope="col">Action</th>
                     </tr>
                 </thead>
-                {* <tbody>
+                <tbody>
                     {assign var = "i" value = 1}
                     {foreach $data.categories as $row}
                         <tr>
                             <td>{$i}</td>
                             {assign var = "i" value = $i + 1}
                             <td>{$row.category_name}</td>
-                            <td>{$row.parent_id}</td>
-                            <td>
-                                <a href="{plugin_url name ='categories/edit/'|cat:$row.id}" class="btn btn-info">Edit</a>
-                            </td>
-                            <td>
-                                <a href="{plugin_url name ='categories/delete/'|cat:$row.id}" class="btn btn-danger">Delete</a>
+                            <td>{$row.parent_category_name}</td>
+                            <td align="center">
+                                <a href="{plugin_url name ='categories/edit?id='|cat:$row.id}" class="btn btn-info">Edit</a>
+                                <a href="{plugin_url name ='categories/delete?id='|cat:$row.id}" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                     {/foreach}
-                </tbody> *}
+                </tbody>
             </table>
         </div>
     </div>
 </div>
 
 {/block}
-
 <!-- JavaScripts -->
 {block name=JS}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
-    <script>
-        $(document).ready( function () {
-            console.log('hi');
-            $('#myTable').DataTable();
-        });
-    </script>
+    <script src="{plugin_url name='assets/JS/category.js'}"></script>
 {/block}

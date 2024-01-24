@@ -15,7 +15,9 @@ class Category extends Model
 
     public function getPaginatedCategories($perPage, $offset)
     {
-        $query = "SELECT * FROM $this->table LIMIT $perPage OFFSET $offset";
+        $query = "SELECT c1.id, c1.category_name, c2.category_name AS parent_category_name
+        FROM $this->table c1
+        LEFT JOIN categories c2 ON c1.parent_id = c2.id LIMIT $perPage OFFSET $offset";
         return $this->conn->query($query)->fetchAll();
     }
 

@@ -9,15 +9,17 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-            <a class="nav-link" href="{plugin_url}">Home </a>
+                <a class="nav-link" href="{plugin_url}">Home</a>
             </li>
-            <li class="nav-item ">
-            <a class="nav-link" href="{plugin_url name = 'categories/index'}">Categories</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Categories
+                </a>
+                <div class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                    <a class="dropdown-item" href="{plugin_url name='categories/index'}">View Categories</a>
+                    <a class="dropdown-item" href="{plugin_url name='categories/add'}">Add Category</a>
+                </div>
             </li>
-
-            <li class="nav-item">
-            <a class="nav-link" href="{plugin_url name = 'categories/add'}">Add Category</a>
-            </li> 
         </ul>
     </div>
 </nav>

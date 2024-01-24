@@ -3,6 +3,7 @@ declare (strict_types = 1);
 
 namespace App\Core;
 use PDO;
+use App\Exceptions\RouteNotFoundException;
 
 /**
  * Front end Controller
@@ -21,7 +22,14 @@ class App
     ) {
         static::$db = Database::pdo($config->db ?? []);
         $this->prepareUrl();
-        $this->render();
+        try {
+            $this->render();
+        } catch (RouteNotFoundException) {
+            http_response_code(404);
+
+            View::load('error\\404');
+        }
+        
     }
 
     public static function db(): PDO
@@ -36,21 +44,29 @@ class App
      */
     private function prepareUrl(): void
     {
-        $url = $_SERVER['QUERY_STRING'];
+        $uri = $_SERVER['QUERY_STRING'];
 
-        if (!empty($url)) {
-            $url = trim($url, '/');
+        if (!empty($uri)) {
+            $url = trim($uri, '/');
             $url = explode("/", $url);
-
+            
             //define the controller
             $this->controller = isset($url[0]) ? 'App\\Controllers\\'.ucwords($url[0]) . 'Controller' : 'App\\Controllers\\HomeController';
 
             //definde the method -action-
-            $this->action = isset($url[1]) ? $url[1] : 'index';
+            $url = isset($url[1]) ? explode("&", $url[1]) : [];
+            $this->action = isset($url[0]) ? $url[0] : 'index';
+            unset($url[0]);
 
-            unset($url[0], $url[1]);
-
-            $this->parameters = !empty($url) ? array_values($url) : [];
+            //set the query paramenters
+            $params = [];
+            if(!empty($url)){
+                foreach ($url as $item) {
+                    list($key, $value) = explode('=', $item, 2);
+                    $params[$key] = $value;
+                }
+                $this->parameters = !empty($params) ? ($params) : [];
+            }  
         }
     }
 
@@ -60,13 +76,14 @@ class App
             $class = new $this->controller;
 
             if (method_exists($class, $this->action)) {
-                call_user_func_array([$class, $this->action], $this->parameters);
+
+                call_user_func_array([$class, $this->action], [$this->parameters]);
+                
             } else {
-                //change it to error handling
-                echo $this->action . ' does not exist in the ' . $this->controller . ' class';
+                throw new RouteNotFoundException();
             }
         } else {
-            echo $this->controller . " not found!";
+            throw new RouteNotFoundException();
         }
     }
 }

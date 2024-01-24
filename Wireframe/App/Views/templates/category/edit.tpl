@@ -1,10 +1,9 @@
 {extends file='home.tpl'}
 
 {block name=content}
-    
-<h1 class="text-center mt-5 mb-2 py-3">Edit Category</h1>
 
 <div class="container">
+    <h1 class="text-center mt-5 mb-2 py-3">Edit Category</h1>
     <div class="row">
         <div class="col-8 mx-auto">
 
@@ -16,8 +15,10 @@
             {/if}
 
             <form class="p-5 border mb-5" method="POST" action="{plugin_url name = 'categories/update'}">
-                <div class="form-group">
-                    <label for="name">Name</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Name</label>
+                    </div>
                     <input type="text" required value="{$data.row.category_name}" name="category_name" class="form-control" id="category_name">
                     <input type="hidden" value="{$data.row.id}" name="id">
                 </div>
@@ -32,7 +33,7 @@
                         {/foreach}
                     </select>
                 </div>
-                <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" name="submit" class="btn btn-primary">Edit</button>
             </form>
 
         </div>

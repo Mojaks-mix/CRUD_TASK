@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Core;
-
+use App\Exceptions\ViewNotFoundException;
 use Smarty;
 
 class View extends Smarty
@@ -32,7 +32,7 @@ class View extends Smarty
             $this->display($file);
         }
         else{
-            echo 'this view: '.$viewName.' doesn\'t exist.';
+            throw new ViewNotFoundException();
         }
     }
 }

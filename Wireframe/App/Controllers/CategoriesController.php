@@ -16,7 +16,7 @@ class CategoriesController
 
     public function index()
     {
-        $this->data['categories'] = ($this->db->getPaginatedCategories(3,2));
+        $this->data['categories'] = ($this->db->getPaginatedCategories(10,0));
         View::load('category\\index', $this->data);
     }
 
@@ -43,15 +43,15 @@ class CategoriesController
             View::load('category\\add',['error' => 'There was an error, try again.']);
     }
 
-    public function edit($id)
+    public function edit($data)
     {
         $this->data['categories'] = $this->formatCategory($this->db->getAllCategories());
-        $this->data['row'] = $this->db->getCategory($id);
+        $this->data['row'] = $this->db->getCategory($data['id']);
 
-        if(($key = array_search($id, $this->data['categories'])) !== false) {
+        if(($key = array_search($data['id'], $this->data['categories'])) !== false) {
             unset($this->data['categories'][$key]);
         }
-
+        
         return View::load('category\\edit',$this->data);
     }
 
@@ -81,9 +81,9 @@ class CategoriesController
     }
 
 
-    public function delete($id)
+    public function delete($data)
     {
-        if($this->db->deleteCategory($id))
+        if($this->db->deleteCategory($data['id']))
         {
             $this->data['success'] = "Category Have Been Deleted";
             return View::load('category\\delete',$this->data);

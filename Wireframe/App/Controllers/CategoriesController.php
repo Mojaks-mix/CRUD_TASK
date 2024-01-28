@@ -16,8 +16,26 @@ class CategoriesController
 
     public function index()
     {
-        $this->data['categories'] = ($this->db->getPaginatedCategories(10,0));
-        View::load('category\\index', $this->data);
+        View::load('category\\index');
+    }
+
+    public function table($data = [])
+    { 
+        $countTotal = $this->db->getAllCategoriesCount();
+        
+        $search = $data['search%5Bvalue%5D'];
+        $limit = $data['length'];
+        $offset = $data['start'];
+
+        $this->data['data'] = ($this->db->getPaginatedCategories($limit, $offset, $search));
+        $countFilter = $this->db->getPaginatedCategories($limit, $offset, $search, 1);
+
+        $this->data['draw'] = (int) $data['draw'];
+        $this->data['recordsTotal'] = $countTotal;
+        $this->data['recordsFiltered'] = $countFilter;
+
+        $response = json_encode($this->data);
+        echo $response;
     }
 
     public function add()
@@ -34,13 +52,11 @@ class CategoriesController
                 'parent_id' => $_POST['parent_id'] == 'No Parent'? null : $_POST['parent_id']
             ];
             if($this->db->addCategory($this->data)){
-                View::load('category\\add',['success' => 'Data was created successfully']);
+                header("Location: " . SITE_URL . 'categories');
             }
-            
+            else
+            View::load('category\\add',['error' => 'There was an error, try again.']);   
         }
-
-        else
-            View::load('category\\add',['error' => 'There was an error, try again.']);
     }
 
     public function edit($data)
@@ -52,46 +68,76 @@ class CategoriesController
             unset($this->data['categories'][$key]);
         }
         
-        return View::load('category\\edit',$this->data);
+        if($this->data['row'] !== null){
+            $response = [
+                'status' => 200,
+                'data'=> $this->data
+            ];
+            echo json_encode($response);
+            return true;
+        }
+        else{
+            $response = [
+                'status' => 422,
+                'message' => 'Invalid Category ID'
+            ];
+            echo json_encode($response);
+            return false;
+        }
     }
 
     public function update()
     {
-        if(isset($_POST['submit']))
+        if(isset($_POST['updated']))
         {
             $id = $_POST['id'];
             $this->db = new Category();
             $this->data = [
                 'category_name' => $_POST['category_name'],
-                'parent_id' => $_POST['parent_id']== 'No Parent'? null : $_POST['parent_id']];
-
-            if($this->db->updateCategory($id,$this->data))
+                'parent_id' => $_POST['parent_id']== 'No Parent'? null : $_POST['parent_id']
+            ];
+            
+            if($id !== $this->data['parent_id'] && $this->db->updateCategory($id,$this->data))
             {
-                $this->data['success'] = "Updated Successfully";
-                $this->data['row'] = $this->db->getCategory($id);
-                View::load('category\\edit',$this->data);
+                $response = [
+                    'status' => 200,
+                    'message' => 'Updated Successfully'
+                ];
+                echo json_encode($response);
+                return true;
             }
             else 
             {
-                $this->data['error'] = "Error";
-                $this->data['row'] = $this->db->getCategory($id);
-                View::load('category\\edit',$this->data);
+                $response = [
+                    'status' => 500,
+                    'message' => 'Error, please try again.',
+                    'row' => $this->db->getCategory($id)
+                ];
+                echo json_encode($response);
+                return false;
             }
         }
     }
-
 
     public function delete($data)
     {
         if($this->db->deleteCategory($data['id']))
         {
-            $this->data['success'] = "Category Have Been Deleted";
-            return View::load('category\\delete',$this->data);
+            $response = [
+                'status' => 200,
+                'message' => 'Category Has Been Deleted'
+            ];
+            echo json_encode($response);
+            return true;
         }
         else 
         {
-            $this->data['error'] = "Error";
-            return View::load('category\\delete',$this->data);
+            $response = [
+                'status' => 500,
+                'message' => 'ERROR, CATEGORY IS NOT DELETED'
+            ];
+            echo json_encode($response);
+            return false;
         }
     }
 

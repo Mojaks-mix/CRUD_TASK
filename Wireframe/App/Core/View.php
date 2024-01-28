@@ -17,14 +17,14 @@ class View extends Smarty
         //$smarty->display('Views\home.tpl');
     }
 
-    public static function load(string $viewName, array $viewData = [])
+    public static function load(string $viewName, array|string $viewData = [])
     {
         $view = new View();
         return $view->render($viewName, $viewData);
 
     }
 
-    public function render(string $viewName, array $viewData = []){
+    public function render(string $viewName, array|string $viewData = []){
         $file = VIEWS . 'templates' . DS . $viewName . '.tpl';
         if(file_exists($file)){
             $this->assign("data",$viewData);

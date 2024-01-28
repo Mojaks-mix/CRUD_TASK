@@ -13,12 +13,64 @@ class Category extends Model
         parent::__construct();
     }
 
-    public function getPaginatedCategories($perPage, $offset)
+    public function getPaginatedCategories($perPage = 0, $offset = 0, string $searchValue = null, $count = 0)
     {
-        $query = "SELECT c1.id, c1.category_name, c2.category_name AS parent_category_name
-        FROM $this->table c1
-        LEFT JOIN categories c2 ON c1.parent_id = c2.id LIMIT $perPage OFFSET $offset";
-        return $this->conn->query($query)->fetchAll();
+        if(! empty($searchValue)){
+            $searchValue = "%" . $searchValue . "%";
+
+            if($count == 1){
+                $query = "SELECT COUNT(*) as count
+                            FROM $this->table c1
+                            LEFT JOIN categories c2 ON c1.parent_id = c2.id
+                            WHERE c1.category_name LIKE :searchValue";
+
+                $stmt = $this->conn->prepare($query);
+
+                $stmt->bindParam(':searchValue', $searchValue);
+
+                $stmt->execute();
+                $result = $stmt->fetch();
+
+                $count = $result['count'];
+
+                return $count;
+            }
+
+            $query = "SELECT c1.id, c1.category_name, c2.category_name AS parent_category_name,
+                        (SELECT COUNT(*) FROM contents WHERE category_id = c1.id) AS content_count
+                        FROM $this->table c1
+                        LEFT JOIN categories c2 ON c1.parent_id = c2.id
+                        WHERE c1.category_name LIKE :searchValue
+                        LIMIT $perPage OFFSET $offset";
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute([$searchValue]);
+
+            return $stmt->fetchAll();
+        }
+        else
+        {
+            if($count == 1){
+                $query = "SELECT COUNT(*) as count
+                            FROM $this->table c1
+                            LEFT JOIN categories c2 ON c1.parent_id = c2.id";
+
+                $stmt = $this->conn->prepare($query);
+                $stmt->execute();
+                $result = $stmt->fetch();
+
+                $count = $result['count'];
+
+                return $count;
+            }
+
+            $query = "SELECT c1.id, c1.category_name, c2.category_name AS parent_category_name,
+                    (SELECT COUNT(*) FROM contents WHERE category_id = c1.id) AS content_count
+                    FROM $this->table c1
+                    LEFT JOIN categories c2 ON c1.parent_id = c2.id
+                    LIMIT $perPage OFFSET $offset";
+            return $this->conn->query($query)->fetchAll();
+        }
     }
 
     public function getAllCategories()
@@ -52,6 +104,7 @@ class Category extends Model
 
     public function deleteCategory($id)
     {
+        $this->conn->prepare("UPDATE $this->table SET parent_id = NULL WHERE parent_id =?")->execute([$id]);   
         return $this->conn->prepare("DELETE FROM $this->table WHERE id=?")->execute([$id]);
     }
 
@@ -67,5 +120,15 @@ class Category extends Model
         $sql = "UPDATE $this->table SET category_name=:category_name, parent_id=:parent_id WHERE id=$id";
 
         return $this->conn->prepare($sql)->execute($data);
+    }
+
+    public function getAllCategoriesCount()
+    {
+        $query = "SELECT COUNT(*) AS category_count FROM $this->table";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        $category_count = $stmt->fetch()['category_count'];
+        return $category_count;
     }
 }

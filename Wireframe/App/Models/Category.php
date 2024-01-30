@@ -104,7 +104,8 @@ class Category extends Model
 
     public function deleteCategory($id)
     {
-        $this->conn->prepare("UPDATE $this->table SET parent_id = NULL WHERE parent_id =?")->execute([$id]);   
+        $this->conn->prepare("UPDATE $this->table SET parent_id = NULL WHERE parent_id =?")->execute([$id]);
+        $this->conn->prepare("UPDATE contents SET category_id = NULL, enabled = 0 WHERE category_id =?")->execute([$id]);
         return $this->conn->prepare("DELETE FROM $this->table WHERE id=?")->execute([$id]);
     }
 

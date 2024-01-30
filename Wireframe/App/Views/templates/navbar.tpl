@@ -20,6 +20,15 @@
                     <a class="dropdown-item" href="{plugin_url name='categories/add'}">Add Category</a>
                 </div>
             </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="contensDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Contents
+                </a>
+                <div class="dropdown-menu" aria-labelledby="contentsDropdown">
+                    <a class="dropdown-item" href="{plugin_url name='contents/index'}">View Categories</a>
+                    <a class="dropdown-item" href="{plugin_url name='contents/add'}">Add Category</a>
+                </div>
+            </li>
         </ul>
     </div>
 </nav>

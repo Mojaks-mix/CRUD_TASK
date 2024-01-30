@@ -71,7 +71,7 @@ class App
     }
 
     private function render()
-    { //will be run for latter and render will go to the router as "resolve" method
+    {
         if (class_exists($this->controller)) {
             $class = new $this->controller;
 

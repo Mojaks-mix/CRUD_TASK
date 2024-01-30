@@ -3,35 +3,36 @@
 namespace App\Controllers;
 
 use App\Core\View;
-use App\Models\Category;
+use App\Models\Content;
 use App\Core\Plugins\CategoriesFormatService;
 
-class CategoriesController
+class ContentsController
 {
     private $db;
     private array $data = [];
     private CategoriesFormatService $categoriesformater;
 
     public function __construct(){
-        $this->db = new Category();
+        $this->db = new Content();
         $this->categoriesformater = new CategoriesFormatService();
+
     }
 
     public function index()
     {
-        View::load('category\\index');
+        View::load('Content\\index');
     }
 
     public function table($data = [])
     { 
-        $countTotal = $this->db->getAllCategoriesCount();
+        $countTotal = $this->db->getAllContentsCount();
         
         $search = $data['search%5Bvalue%5D'];
         $limit = $data['length'];
         $offset = $data['start'];
 
-        $this->data['data'] = ($this->db->getPaginatedCategories($limit, $offset, $search));
-        $countFilter = $this->db->getPaginatedCategories($limit, $offset, $search, 1);
+        $this->data['data'] = ($this->db->getPaginatedContents($limit, $offset, $search));
+        $countFilter = $this->db->getPaginatedContents($limit, $offset, $search, 1);
 
         $this->data['draw'] = (int) $data['draw'];
         $this->data['recordsTotal'] = $countTotal;
@@ -43,33 +44,34 @@ class CategoriesController
 
     public function add()
     {
-        $this->data = $this->categoriesformater->process($this->db->getAllCategories());
-        View::load('category\\add',$this->data);
+        $this->data = $this->categoriesformater->process($this->db->getCategory()->getAllCategories());
+        View::load('Content\\add',$this->data);
     }
 
     public function store()
     {
+        $currentDate = date('Y-m-d H:i:s');
         if (isset($_POST['submit'])) {
             $this->data = [
-                'category_name' => $_POST['category_name'],
-                'parent_id' => $_POST['parent_id'] == 'No Parent'? null : $_POST['parent_id']
+                'content_title' => $_POST['content_title'],
+                 'content' =>  $_POST['content'],
+                 'category_id'=> $_POST['category_id'] == 'No Category' ? null : $_POST['category_id'],
+                 'enabled'=> isset($_POST['enabled']) ? '1' : '0',
+                 'added_by'=> '1',//will be be changed to the user_id from the session
+                 'added_date' => $currentDate
             ];
-            if($this->db->addCategory($this->data)){
-                header("Location: " . SITE_URL . 'categories');
+            if($this->db->addContent($this->data)){
+                header("Location: " . SITE_URL . 'Contents');
             }
             else
-            View::load('category\\add',['error' => 'There was an error, try again.']);   
+            View::load('Content\\add',['error' => 'There was an error, try again.']);   
         }
     }
 
     public function edit($data)
     {
-        $this->data['categories'] = $this->categoriesformater->process($this->db->getAllCategories(), $data['id']);
-        $this->data['row'] = $this->db->getCategory($data['id']);
-
-        if(($key = array_search($data['id'], $this->data['categories'])) !== false) {
-            unset($this->data['categories'][$key]);
-        }
+        $this->data['categories'] = $this->categoriesformater->process($this->db->getCategory()->getAllCategories());;
+        $this->data['row'] = $this->db->getContent($data['id']);
         
         if($this->data['row'] !== null){
             $response = [
@@ -82,7 +84,7 @@ class CategoriesController
         else{
             $response = [
                 'status' => 422,
-                'message' => 'Invalid Category ID'
+                'message' => 'Invalid Content ID'
             ];
             echo json_encode($response);
             return false;
@@ -91,16 +93,22 @@ class CategoriesController
 
     public function update()
     {
+        $currentDate = date('Y-m-d H:i:s');
+
         if(isset($_POST['updated']))
         {
             $id = $_POST['id'];
-            $this->db = new Category();
-            $this->data = [
-                'category_name' => $_POST['category_name'],
-                'parent_id' => $_POST['parent_id']== 'No Parent'? null : $_POST['parent_id']
+            $this->db = new Content();
+            $this->data =[
+                'content_title' => $_POST['content_title'],
+                 'content' => $_POST['content'],
+                 'category_id'=> $_POST['category_id'],
+                 'enabled'=> isset($_POST['enabled']) ? '1' : '0',
+                 'added_by'=> '1',//will be be changed to the user_id from the session
+                 'added_date' => $currentDate
             ];
             
-            if($id !== $this->data['parent_id'] && $this->db->updateCategory($id,$this->data))
+            if($this->db->updateContent($id,$this->data))
             {
                 $response = [
                     'status' => 200,
@@ -114,7 +122,7 @@ class CategoriesController
                 $response = [
                     'status' => 500,
                     'message' => 'Error, please try again.',
-                    'row' => $this->db->getCategory($id)
+                    'row' => $this->db->getContent($id)
                 ];
                 echo json_encode($response);
                 return false;
@@ -124,11 +132,11 @@ class CategoriesController
 
     public function delete($data)
     {
-        if($this->db->deleteCategory($data['id']))
+        if($this->db->deleteContent($data['id']))
         {
             $response = [
                 'status' => 200,
-                'message' => 'Category Has Been Deleted'
+                'message' => 'Content Has Been Deleted'
             ];
             echo json_encode($response);
             return true;
@@ -137,7 +145,7 @@ class CategoriesController
         {
             $response = [
                 'status' => 500,
-                'message' => 'ERROR, CATEGORY IS NOT DELETED'
+                'message' => 'ERROR, CONTENT IS NOT DELETED'
             ];
             echo json_encode($response);
             return false;

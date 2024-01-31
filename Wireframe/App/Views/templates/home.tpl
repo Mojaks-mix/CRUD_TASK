@@ -24,14 +24,21 @@
 
     <!-- Main Content -->
     {block name=content}
-      <div class="jumbotron text-center mt-5">
-        <h1 class="display-4">CRUD_MVC</h1>
-        <hr class="my-4">
-        <a class="btn btn-primary btn-lg" href="{plugin_url name = 'categories'}" role="button">SHOW Categories</a>
+      <div class="container">
+        <h1 class="display-6">Total Categories Count: {$data.categoriesCount}</h1>
+        <h1 class="display-6">Total Contents Count: {$data.contentsCount}</h1>
+        <div class="row">
+          <div class="col-8 mx-auto">
+            <canvas id="myChart"></canvas>
+          </div>
+        </div>
       </div>
     {/block}
 
     <!-- JavaScripts -->
-    {block name=JS}{/block}
+    {block name=JS}
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="{plugin_url name='assets/JS/Pie_Chart.js'}"></script>
+    {/block}
   </body>
 </html>

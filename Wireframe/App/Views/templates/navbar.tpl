@@ -25,9 +25,14 @@
                     Contents
                 </a>
                 <div class="dropdown-menu" aria-labelledby="contentsDropdown">
-                    <a class="dropdown-item" href="{plugin_url name='contents/index'}">View Categories</a>
-                    <a class="dropdown-item" href="{plugin_url name='contents/add'}">Add Category</a>
+                    <a class="dropdown-item" href="{plugin_url name='contents/index'}">View Contents</a>
+                    <a class="dropdown-item" href="{plugin_url name='contents/add'}">Add Content</a>
                 </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav float-right">
+            <li class="nav-item active">
+                <a class="nav-link" href="{plugin_url name='auth/logout'}">Logout</a>
             </li>
         </ul>
     </div>

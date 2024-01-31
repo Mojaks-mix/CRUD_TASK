@@ -9,7 +9,7 @@ use PDO;
 abstract class Model
 {
     protected PDO $conn;
-    protected $table = '';
+    protected $table;
     
     public function __construct()
     {

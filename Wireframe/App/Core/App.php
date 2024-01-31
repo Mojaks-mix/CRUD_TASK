@@ -4,6 +4,7 @@ declare (strict_types = 1);
 namespace App\Core;
 use PDO;
 use App\Exceptions\RouteNotFoundException;
+use App\Core\Plugins\AuthValidationService;
 
 /**
  * Front end Controller
@@ -12,6 +13,7 @@ use App\Exceptions\RouteNotFoundException;
 class App
 {
     private static PDO $db;
+    private static AuthValidationService $auth;
     //~~~~~Methods~~~~~
 
     public function __construct(
@@ -21,9 +23,25 @@ class App
         protected array $parameters = []
     ) {
         static::$db = Database::pdo($config->db ?? []);
+        static::$auth = new AuthValidationService();
         $this->prepareUrl();
         try {
-            $this->render();
+            if(static::$auth->process($_SESSION)){
+                if($this->action === 'verify' || $this->action === 'login'){
+                    header("Location: " . SITE_URL . 'home');
+                }
+                else{
+                    $this->render();
+                }
+            }
+            elseif($this->action === 'verify')
+            {
+                $this->render();
+            }
+            else
+            {
+                View::load('Registeration\\login');
+            }
         } catch (RouteNotFoundException) {
             http_response_code(404);
 
@@ -36,7 +54,6 @@ class App
     {
         return static::$db;
     }
-
     
     /**
      * extract the controller, method and parameters
@@ -72,6 +89,7 @@ class App
 
     private function render()
     {
+        
         if (class_exists($this->controller)) {
             $class = new $this->controller;
 

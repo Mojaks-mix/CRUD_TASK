@@ -57,7 +57,7 @@ class ContentsController
                  'content' =>  $_POST['content'],
                  'category_id'=> $_POST['category_id'] == 'No Category' ? null : $_POST['category_id'],
                  'enabled'=> isset($_POST['enabled']) ? '1' : '0',
-                 'added_by'=> '1',//will be be changed to the user_id from the session
+                 'added_by'=> $_SESSION['user_id'],
                  'added_date' => $currentDate
             ];
             if($this->db->addContent($this->data)){
@@ -104,7 +104,7 @@ class ContentsController
                  'content' => $_POST['content'],
                  'category_id'=> $_POST['category_id'],
                  'enabled'=> isset($_POST['enabled']) ? '1' : '0',
-                 'added_by'=> '1',//will be be changed to the user_id from the session
+                 'added_by'=> $_SESSION['user_id'],
                  'added_date' => $currentDate
             ];
             
